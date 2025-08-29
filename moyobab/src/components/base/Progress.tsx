@@ -14,15 +14,15 @@ export default function Progress({
   const percentage = Math.min((value / max) * 100, 100);
 
   return (
-    <div className={`w-full ${className}`}>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+    <div className={`space-y-1 ${className}`}>
+      <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
         <div
-          className="bg-[#5B8DEF] h-2 rounded-full transition-all duration-300 ease-out"
+          className="h-2.5 bg-[#5B8DEF] transition-all duration-300 ease-in-out"
           style={{ width: `${percentage}%` }}
         />
       </div>
       {showLabel && (
-        <div className="text-sm text-gray-600 mt-1">
+        <div className="text-sm font-medium text-right text-gray-600">
           {Math.round(percentage)}%
         </div>
       )}
