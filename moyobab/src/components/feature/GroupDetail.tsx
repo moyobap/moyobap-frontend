@@ -1,4 +1,3 @@
-import React from "react";
 import Countdown from "../base/Countdown";
 import Progress from "../base/Progress";
 import Button from "../base/Button";
