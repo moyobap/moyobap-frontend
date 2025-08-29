@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
@@ -9,7 +10,6 @@ const navItems = [
 
 export default function Header() {
   const location = useLocation();
-
   const isAuthPage = ["/login", "/signup"].includes(location.pathname);
   if (isAuthPage) return null;
 
@@ -18,13 +18,9 @@ export default function Header() {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link
-          to="/"
-          className="text-2xl font-bold flex items-center space-x-1"
-          style={{ fontFamily: '"Pacifico", serif' }}
-        >
-          <span className="text-[#5B8DEF]">Moyo</span>
-          <span className="text-gray-800">Bob</span>
+        <Link to="/" className="flex items-center space-x-1 text-2xl font-bold">
+          <span className="text-primary">Moyo</span>
+          <span className="text-gray-900">Bob</span>
         </Link>
 
         <nav className="hidden md:flex space-x-6">
@@ -34,8 +30,8 @@ export default function Header() {
               to={item.path}
               className={`text-sm font-medium transition-colors ${
                 isActive(item.path)
-                  ? "text-[#5B8DEF]"
-                  : "text-gray-600 hover:text-[#5B8DEF]"
+                  ? "text-primary"
+                  : "text-gray-600 hover:text-primary"
               }`}
             >
               {item.label}
@@ -43,17 +39,16 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center space-x-2 text-sm">
-          {/* TODO: 로그인 상태 확인 후 분기처리 필요 */}
+        <div className="hidden sm:flex space-x-4">
           <Link
             to="/login"
-            className="text-gray-600 hover:text-[#5B8DEF] transition-colors hidden sm:inline-block"
+            className="text-gray-600 hover:text-primary transition-colors"
           >
             로그인
           </Link>
           <Link
             to="/signup"
-            className="text-gray-600 hover:text-[#5B8DEF] transition-colors hidden sm:inline-block"
+            className="text-gray-600 hover:text-primary transition-colors"
           >
             회원가입
           </Link>
