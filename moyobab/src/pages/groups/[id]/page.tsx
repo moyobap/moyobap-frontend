@@ -12,7 +12,7 @@ export default function GroupDetailPage() {
   useEffect(() => {
     const load = async () => {
       const data = await api.getGroupById(id!);
-      setGroup(data);
+      setGroup(data ?? null);
     };
     load();
   }, [id]);
