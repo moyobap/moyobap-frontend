@@ -14,10 +14,9 @@ export default function Card({
   onClick,
 }: CardProps) {
   const baseClasses =
-    "bg-white rounded-lg border border-gray-200 overflow-hidden";
-  const hoverClasses = hover
-    ? "hover:shadow-md transition-shadow cursor-pointer"
-    : "";
+    "bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transition-shadow";
+  const hoverClasses = hover ? "hover:shadow-md cursor-pointer" : "";
+
   return (
     <div
       className={`${baseClasses} ${hoverClasses} ${className}`}
