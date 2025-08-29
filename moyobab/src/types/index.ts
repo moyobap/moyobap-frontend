@@ -1,3 +1,11 @@
+export interface User {
+  id: string;
+  nickname: string;
+  avatarUrl?: string;
+  preferredRadiusKm: number;
+  preferredCategories: string[];
+}
+
 export interface Brand {
   id: string;
   name: string;
