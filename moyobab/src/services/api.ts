@@ -6,4 +6,8 @@ export const api = {
     await new Promise((res) => setTimeout(res, 500));
     return mockGroups;
   },
+
+  getGroupById: async (id: string): Promise<Group | undefined> => {
+    return mockGroups.find((group) => group.id === id);
+  },
 };
