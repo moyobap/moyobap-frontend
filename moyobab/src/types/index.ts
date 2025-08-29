@@ -6,6 +6,17 @@ export interface User {
   preferredCategories: string[];
 }
 
+export interface Address {
+  id: string;
+  label: string;
+  line1: string;
+  detail?: string;
+  city?: string;
+  zipcode?: string;
+  lat?: number;
+  lng?: number;
+}
+
 export interface Brand {
   id: string;
   name: string;
@@ -13,6 +24,15 @@ export interface Brand {
   image?: string;
   minOrderAmount: number;
   deliveryFee: number;
+}
+
+export interface MenuItem {
+  id: string;
+  brandId: string;
+  name: string;
+  price: number;
+  options?: Array<{ name: string; priceDelta: number }>;
+  image?: string;
 }
 
 export interface GroupMember {
