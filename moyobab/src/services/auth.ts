@@ -1,5 +1,6 @@
 import axios from "axios";
 import { saveTokens, clearTokens, getAccessToken } from "../utils/tokenStorage";
+import { LoginType } from "../types/auth";
 
 interface LoginRequest {
   email: string;
@@ -43,7 +44,7 @@ apiClient.interceptors.request.use((config) => {
 export async function login(
   email: string,
   password: string,
-  loginType = "BASIC"
+  loginType: LoginType = LoginType.BASIC
 ) {
   const response = await apiClient.post("/auth/login", {
     email,
