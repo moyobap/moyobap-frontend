@@ -4,6 +4,7 @@ import AuthLayout from "../components/layout/AuthLayout";
 import { FormField } from "../components/form/FormField";
 import Button from "../components/base/Button";
 import { login } from "../services/auth";
+import { LoginType } from "../types/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       setError(null);
-      const tokens = await login(email, password, login.LoginType.BASIC);
+      const tokens = await login(email, password, LoginType.BASIC);
       navigate("/");
     } catch (err: any) {
       if (err.response) {
