@@ -3,16 +3,27 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/layout/AuthLayout";
 import { FormField } from "../components/form/FormField";
 import Button from "../components/base/Button";
+import { login } from "../services/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 로그인 API 호출
-    navigate("/");
+    try {
+      setError(null);
+      const tokens = await login(email, password, login.LoginType.BASIC);
+      navigate("/");
+    } catch (err: any) {
+      if (err.response) {
+        setError(err.response.data.message || "로그인 실패");
+      } else {
+        setError("로그인 중 오류 발생");
+      }
+    }
   };
 
   return (
