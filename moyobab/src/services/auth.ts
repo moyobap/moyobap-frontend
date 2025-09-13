@@ -2,12 +2,6 @@ import axios from "axios";
 import { saveTokens, clearTokens, getAccessToken } from "../utils/tokenStorage";
 import { LoginType } from "../types/auth";
 
-interface LoginRequest {
-  email: string;
-  password: string;
-  loginType: string;
-}
-
 interface SignupRequest {
   email: string;
   name: string;
@@ -15,16 +9,6 @@ interface SignupRequest {
   birth: string;
   phone: string;
   password: string;
-}
-
-interface CheckEmailResponse {
-  available: boolean;
-  message: string;
-}
-
-interface CheckNicknameResponse {
-  available: boolean;
-  message: string;
 }
 
 const apiClient = axios.create({
@@ -62,18 +46,20 @@ export async function signup(req: SignupRequest) {
   return response.data;
 }
 
-export async function checkEmail(email: string): Promise<CheckEmailResponse> {
+export async function checkEmailAvailable(
+  email: string
+): Promise<{ available: boolean; message: string }> {
   const response = await apiClient.get("/users/check-email", {
-    params: { email },
+    params: { email: email.trim() },
   });
   return response.data.data;
 }
 
-export async function checkNickname(
+export async function checkNicknameAvailable(
   nickname: string
-): Promise<CheckNicknameResponse> {
+): Promise<{ available: boolean; message: string }> {
   const response = await apiClient.get("/users/check-nickname", {
-    params: { nickname },
+    params: { nickname: nickname.trim() },
   });
   return response.data.data;
 }
