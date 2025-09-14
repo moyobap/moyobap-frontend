@@ -13,6 +13,7 @@ import {
   signup,
 } from "../services/auth";
 import debounce from "lodash.debounce";
+import { LoginType } from "../types/auth";
 
 interface SignupFormValues {
   email: string;
@@ -152,6 +153,7 @@ export default function SignupPage() {
         birth: data.birth,
         phone: data.phone,
         password: data.password,
+        loginType: LoginType.BASIC,
       });
 
       navigate("/login");

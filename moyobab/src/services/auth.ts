@@ -9,6 +9,7 @@ interface SignupRequest {
   birth: string;
   phone: string;
   password: string;
+  loginType?: LoginType;
 }
 
 const apiClient = axios.create({
@@ -42,7 +43,10 @@ export async function login(
 }
 
 export async function signup(req: SignupRequest) {
-  const response = await apiClient.post("/users/signup", req);
+  const response = await apiClient.post("/users/signup", {
+    ...req,
+    loginType: req.loginType || LoginType.BASIC,
+  });
   return response.data;
 }
 
