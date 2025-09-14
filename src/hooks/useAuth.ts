@@ -1,0 +1,36 @@
+import { useState, useEffect } from "react";
+import { getAccessToken, clearTokens } from "../utils/tokenStorage";
+import { login, logout as apiLogout } from "../services/auth";
+import { LoginType } from "../types/auth";
+
+export function useAuth() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const token = getAccessToken();
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+    setLoading(false);
+  }, []);
+
+  const doLogin = async (
+    email: string,
+    password: string,
+    loginType = LoginType.BASIC
+  ) => {
+    const tokens = await login(email, password, loginType);
+    setIsAuthenticated(true);
+    return tokens;
+  };
+
+  const doLogout = async () => {
+    await apiLogout();
+    setIsAuthenticated(false);
+  };
+
+  return { isAuthenticated, loading, doLogin, doLogout };
+}
