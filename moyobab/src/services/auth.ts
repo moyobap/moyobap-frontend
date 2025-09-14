@@ -6,7 +6,7 @@ interface SignupRequest {
   email: string;
   name: string;
   nickname: string;
-  birth: string;
+  birthDate: string;
   phone: string;
   password: string;
   loginType?: LoginType;

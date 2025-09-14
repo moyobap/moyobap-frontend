@@ -150,7 +150,7 @@ export default function SignupPage() {
         email: data.email,
         name: data.name,
         nickname: data.nickname,
-        birth: data.birth,
+        birthDate: new Date(data.birth).toISOString().slice(0, 10),
         phone: data.phone,
         password: data.password,
         loginType: LoginType.BASIC,
