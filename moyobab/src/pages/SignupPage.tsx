@@ -148,10 +148,10 @@ export default function SignupPage() {
     try {
       await signup({
         email: data.email,
-        name: data.name,
+        username: data.name,
         nickname: data.nickname,
         birthDate: new Date(data.birth).toISOString().slice(0, 10),
-        phone: data.phone,
+        phoneNumber: data.phone,
         password: data.password,
         loginType: LoginType.BASIC,
       });

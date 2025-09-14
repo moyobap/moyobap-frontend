@@ -4,10 +4,10 @@ import { LoginType } from "../types/auth";
 
 interface SignupRequest {
   email: string;
-  name: string;
+  username: string;
   nickname: string;
   birthDate: string;
-  phone: string;
+  phoneNumber: string;
   password: string;
   loginType?: LoginType;
 }
