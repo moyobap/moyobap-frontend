@@ -5,6 +5,7 @@ import { FormField } from "../components/form/FormField";
 import Button from "../components/base/Button";
 import { LoginType } from "../types/auth";
 import { useAuth } from "../hooks/useAuth";
+import { useUserStore } from "../utils/useUserStore";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,7 +21,8 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      await doLogin(email, password, LoginType.BASIC);
+      const response = await doLogin(email, password, LoginType.BASIC);
+      useUserStore.getState().setUser(response.nickname);
       navigate("/");
     } catch (err: any) {
       setError(err.message || "로그인 실패");

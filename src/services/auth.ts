@@ -21,6 +21,7 @@ type ApiResponse<T> = {
 type AuthTokens = {
   accessToken: string;
   refreshToken: string;
+  nickname: string;
 };
 
 const apiClient = axios.create({
