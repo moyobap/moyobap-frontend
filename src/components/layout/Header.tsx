@@ -1,4 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useUserStore } from "../../utils/useUserStore";
+import { useAuth } from "../../hooks/useAuth";
 
 const navItems = [
   { label: "홈", path: "/" },
@@ -9,10 +11,20 @@ const navItems = [
 
 export default function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { nickname, isLoggedIn, logout } = useUserStore();
+  const { doLogout } = useAuth();
+
   const isAuthPage = ["/login", "/signup"].includes(location.pathname);
   if (isAuthPage) return null;
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = async () => {
+    await doLogout();
+    logout();
+    navigate("/login");
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -39,18 +51,32 @@ export default function Header() {
         </nav>
 
         <div className="hidden sm:flex space-x-4">
-          <Link
-            to="/login"
-            className="text-gray-600 hover:text-primary transition-colors"
-          >
-            로그인
-          </Link>
-          <Link
-            to="/signup"
-            className="text-gray-600 hover:text-primary transition-colors"
-          >
-            회원가입
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <span className="text-gray-700 font-medium">{nickname}님</span>
+              <button
+                onClick={handleLogout}
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                로그인
+              </Link>
+              <Link
+                to="/signup"
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                회원가입
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

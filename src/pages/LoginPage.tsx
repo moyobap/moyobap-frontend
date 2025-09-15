@@ -3,27 +3,31 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/layout/AuthLayout";
 import { FormField } from "../components/form/FormField";
 import Button from "../components/base/Button";
-import { login } from "../services/auth";
 import { LoginType } from "../types/auth";
+import { useAuth } from "../hooks/useAuth";
+import { useUserStore } from "../utils/useUserStore";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { doLogin } = useAuth();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    setError(null);
+    setLoading(true);
     try {
-      setError(null);
-      const tokens = await login(email, password, LoginType.BASIC);
+      const { nickname } = await doLogin(email, password, LoginType.BASIC);
+      useUserStore.getState().setUser(nickname);
       navigate("/");
     } catch (err: any) {
-      if (err.response) {
-        setError(err.response.data.message || "로그인 실패");
-      } else {
-        setError("로그인 중 오류 발생");
-      }
+      setError(err.message || "로그인 실패");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,9 +56,18 @@ export default function LoginPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </FormField>
-        <Button type="submit" variant="primary" size="md" className="w-full">
-          로그인
+        <Button
+          type="submit"
+          variant="primary"
+          size="md"
+          className="w-full"
+          disabled={loading}
+        >
+          {loading ? "로그인 중..." : "로그인"}
         </Button>
+        {error && (
+          <p className="mt-2 text-sm text-danger text-center">{error}</p>
+        )}
       </form>
       <p className="text-sm text-center text-gray-600">
         회원이 아니신가요?{" "}

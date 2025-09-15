@@ -22,14 +22,22 @@ export function useAuth() {
     password: string,
     loginType = LoginType.BASIC
   ) => {
-    const tokens = await login(email, password, loginType);
+    const { accessToken, refreshToken, nickname } = await login(
+      email,
+      password,
+      loginType
+    );
     setIsAuthenticated(true);
-    return tokens;
+    return { accessToken, refreshToken, nickname };
   };
 
   const doLogout = async () => {
-    await apiLogout();
-    setIsAuthenticated(false);
+    try {
+      await apiLogout();
+    } finally {
+      clearTokens();
+      setIsAuthenticated(false);
+    }
   };
 
   return { isAuthenticated, loading, doLogin, doLogout };

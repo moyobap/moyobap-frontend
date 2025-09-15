@@ -105,6 +105,7 @@ export default function SignupPage() {
     debounce(async (value: string) => {
       try {
         const res = await checkNicknameAvailable(value);
+
         if (!res.available) {
           setError("nickname", {
             type: "manual",
@@ -136,7 +137,7 @@ export default function SignupPage() {
   }, [emailValue]);
 
   useEffect(() => {
-    if (nicknameValue && !errors.nickname) {
+    if (nicknameValue) {
       debouncedCheckNickname(nicknameValue);
     }
     return () => {
@@ -289,7 +290,11 @@ export default function SignupPage() {
           type="submit"
           variant="primary"
           size="md"
-          className="w-full"
+          className={`w-full transition-colors ${
+            !isValid || isSubmitting
+              ? "bg-blue-200 text-white cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600 text-white"
+          }`}
           disabled={!isValid || isSubmitting}
         >
           {isSubmitting ? "가입 중..." : "회원가입"}

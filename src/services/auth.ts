@@ -12,9 +12,26 @@ interface SignupRequest {
   loginType?: LoginType;
 }
 
+type ApiResponse<T> = {
+  code: number;
+  message: string;
+  data: T;
+};
+
+type AuthResponseData = {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    userId: number;
+    email: string;
+    nickname: string;
+  };
+};
+
 const apiClient = axios.create({
   baseURL: "http://localhost:8080/api/v1",
   withCredentials: true,
+  timeout: 10000, // 10초
 });
 
 // access token이 있으면 헤더 추가
@@ -31,15 +48,27 @@ export async function login(
   password: string,
   loginType: LoginType = LoginType.BASIC
 ) {
-  const response = await apiClient.post("/auth/login", {
-    email,
-    password,
-    loginType,
-  });
-  const data = response.data;
-  const tokens = data.data;
-  saveTokens(tokens.accessToken, tokens.refreshToken);
-  return tokens;
+  const response = await apiClient.post<ApiResponse<AuthResponseData>>(
+    "/auth/login",
+    {
+      email,
+      password,
+      loginType,
+    }
+  );
+  const { accessToken, refreshToken, user } = response.data.data;
+
+  if (!accessToken || !refreshToken || !user?.nickname) {
+    throw new Error("잘못된 형식의 로그인 응답입니다.");
+  }
+
+  saveTokens(accessToken, refreshToken);
+
+  return {
+    accessToken,
+    refreshToken,
+    nickname: user.nickname,
+  };
 }
 
 export async function signup(req: SignupRequest) {
