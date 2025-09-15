@@ -21,8 +21,8 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      const response = await doLogin(email, password, LoginType.BASIC);
-      useUserStore.getState().setUser(response.nickname);
+      const { nickname } = await doLogin(email, password, LoginType.BASIC);
+      useUserStore.getState().setUser(nickname);
       navigate("/");
     } catch (err: any) {
       setError(err.message || "로그인 실패");

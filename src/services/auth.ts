@@ -18,10 +18,14 @@ type ApiResponse<T> = {
   data: T;
 };
 
-type AuthTokens = {
+type AuthResponseData = {
   accessToken: string;
   refreshToken: string;
-  nickname: string;
+  user: {
+    userId: number;
+    email: string;
+    nickname: string;
+  };
 };
 
 const apiClient = axios.create({
@@ -44,7 +48,7 @@ export async function login(
   password: string,
   loginType: LoginType = LoginType.BASIC
 ) {
-  const response = await apiClient.post<ApiResponse<AuthTokens>>(
+  const response = await apiClient.post<ApiResponse<AuthResponseData>>(
     "/auth/login",
     {
       email,
@@ -52,12 +56,19 @@ export async function login(
       loginType,
     }
   );
-  const { data: tokens } = response.data;
-  if (!tokens?.accessToken || !tokens?.refreshToken) {
-    throw new Error("Malformed login response: tokens missing");
+  const { accessToken, refreshToken, user } = response.data.data;
+
+  if (!accessToken || !refreshToken || !user?.nickname) {
+    throw new Error("잘못된 형식의 로그인 응답입니다.");
   }
-  saveTokens(tokens.accessToken, tokens.refreshToken);
-  return tokens;
+
+  saveTokens(accessToken, refreshToken);
+
+  return {
+    accessToken,
+    refreshToken,
+    nickname: user.nickname,
+  };
 }
 
 export async function signup(req: SignupRequest) {
