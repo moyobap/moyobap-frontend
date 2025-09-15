@@ -1,20 +1,34 @@
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 
+function safeStorage(): Storage | null {
+  try {
+    if (typeof window !== "undefined" && window.localStorage)
+      return window.localStorage;
+  } catch {}
+  return null;
+}
+
 export function saveTokens(accessToken: string, refreshToken: string) {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  const ls = safeStorage();
+  if (!ls) return;
+  ls.setItem(ACCESS_TOKEN_KEY, accessToken);
+  ls.setItem(REFRESH_TOKEN_KEY, refreshToken);
 }
 
 export function getAccessToken(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
+  const ls = safeStorage();
+  return ls ? ls.getItem(ACCESS_TOKEN_KEY) : null;
 }
 
 export function getRefreshToken(): string | null {
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
+  const ls = safeStorage();
+  return ls ? ls.getItem(REFRESH_TOKEN_KEY) : null;
 }
 
 export function clearTokens() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  const ls = safeStorage();
+  if (!ls) return;
+  ls.removeItem(ACCESS_TOKEN_KEY);
+  ls.removeItem(REFRESH_TOKEN_KEY);
 }
