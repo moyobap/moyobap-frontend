@@ -105,6 +105,7 @@ export default function SignupPage() {
     debounce(async (value: string) => {
       try {
         const res = await checkNicknameAvailable(value);
+
         if (!res.available) {
           setError("nickname", {
             type: "manual",
@@ -136,7 +137,7 @@ export default function SignupPage() {
   }, [emailValue]);
 
   useEffect(() => {
-    if (nicknameValue && !errors.nickname) {
+    if (nicknameValue) {
       debouncedCheckNickname(nicknameValue);
     }
     return () => {
