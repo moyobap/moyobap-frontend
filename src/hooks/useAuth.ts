@@ -28,8 +28,12 @@ export function useAuth() {
   };
 
   const doLogout = async () => {
-    await apiLogout();
-    setIsAuthenticated(false);
+    try {
+      await apiLogout();
+    } finally {
+      clearTokens();
+      setIsAuthenticated(false);
+    }
   };
 
   return { isAuthenticated, loading, doLogin, doLogout };
