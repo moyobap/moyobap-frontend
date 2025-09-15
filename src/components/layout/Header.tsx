@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUserStore } from "../../utils/useUserStore";
+import { useAuth } from "../../hooks/useAuth";
 
 const navItems = [
   { label: "홈", path: "/" },
@@ -12,13 +13,15 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { nickname, isLoggedIn, logout } = useUserStore();
+  const { doLogout } = useAuth();
 
   const isAuthPage = ["/login", "/signup"].includes(location.pathname);
   if (isAuthPage) return null;
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await doLogout();
     logout();
     navigate("/login");
   };
