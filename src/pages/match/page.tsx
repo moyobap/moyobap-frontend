@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/layout/Header";
 import StepCategory from "./StepCategory";
 import StepCondition from "./StepCondition";
@@ -17,8 +17,33 @@ export default function MatchPage() {
   const [distanceKm, setDistanceKm] = useState<number>(1);
   const [durationMinutes, setDurationMinutes] = useState<number>(30);
 
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
   const goNext = () => setStep((p) => (p < 4 ? ((p + 1) as Step) : p));
   const goBack = () => setStep((p) => (p > 1 ? ((p - 1) as Step) : p));
+
+  // 위치 정보 가져오는 로직 추가
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationError("이 브라우저에서는 위치 정보가 지원되지 않습니다.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      },
+      (error) => {
+        setLocationError(
+          "위치 정보를 가져올 수 없습니다. 위치 접근을 허용해주세요."
+        );
+        console.error(error);
+      }
+    );
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -60,12 +85,11 @@ export default function MatchPage() {
             onBack={goBack}
           />
         )}
-        {step === 3 && category && (
+        {step === 3 && category && latitude && longitude && (
           <StepResults
             categoryKey={category.key}
-            // 여기에 위도/경도 필요 (사용자 위치를 받아야 함)
-            lat={/* 사용자 위도 */}
-            lng={/* 사용자 경도 */}
+            lat={latitude}
+            lng={longitude}
             radius={distanceKm * 1000}
             onBack={goBack}
             onNext={goNext}
