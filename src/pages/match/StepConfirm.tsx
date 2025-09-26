@@ -1,8 +1,10 @@
 import Button from "../../components/base/Button";
-import type { Brand } from "../../types";
 
 interface Props {
-  brand: Brand;
+  category: {
+    key: string;
+    displayName: string;
+  };
   minAmount: number;
   distanceKm: number;
   durationMinutes: number;
@@ -10,7 +12,7 @@ interface Props {
 }
 
 export default function StepConfirm({
-  brand,
+  category,
   minAmount,
   distanceKm,
   durationMinutes,
@@ -19,7 +21,7 @@ export default function StepConfirm({
   const handleSubmit = () => {
     // TODO: 추후 POST API 연동 필요
     console.log("[그룹 생성]", {
-      brandId: brand.id,
+      categoryKey: category.key,
       minAmount,
       distanceKm,
       durationMinutes,
@@ -35,8 +37,8 @@ export default function StepConfirm({
         <h3 className="text-gray-800 font-medium mb-4">그룹 정보 확인</h3>
         <div className="space-y-2 text-sm text-gray-700">
           <div className="flex justify-between">
-            <span>브랜드</span>
-            <span>{brand.name}</span>
+            <span>카테고리</span>
+            <span>{category.displayName}</span>
           </div>
           <div className="flex justify-between">
             <span>예상 주문 금액</span>
