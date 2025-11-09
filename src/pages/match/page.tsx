@@ -4,6 +4,7 @@ import StepCategory from "./StepCategory";
 import StepCondition from "./StepCondition";
 import StepResults from "./StepResults";
 import StepConfirm from "./StepConfirm";
+import type { KakaoPlaceDto } from "../../types/place";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -20,6 +21,9 @@ export default function MatchPage() {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<KakaoPlaceDto | null>(
+    null
+  );
 
   const goNext = () => setStep((p) => (p < 4 ? ((p + 1) as Step) : p));
   const goBack = () => setStep((p) => (p > 1 ? ((p - 1) as Step) : p));
@@ -93,14 +97,19 @@ export default function MatchPage() {
             radius={distanceKm * 1000}
             onBack={goBack}
             onNext={goNext}
+            onSelectPlace={(place) => {
+              setSelectedPlace(place);
+              goNext();
+            }}
           />
         )}
-        {step === 4 && category && (
+        {step === 4 && category && selectedPlace && (
           <StepConfirm
             category={category}
             minAmount={minAmount}
             distanceKm={distanceKm}
             durationMinutes={durationMinutes}
+            place={selectedPlace}
             onBack={goBack}
           />
         )}

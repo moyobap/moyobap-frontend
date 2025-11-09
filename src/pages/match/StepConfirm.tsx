@@ -1,4 +1,5 @@
 import Button from "../../components/base/Button";
+import type { KakaoPlaceDto } from "../../types/place";
 
 interface Props {
   category: {
@@ -8,6 +9,7 @@ interface Props {
   minAmount: number;
   distanceKm: number;
   durationMinutes: number;
+  place: KakaoPlaceDto;
   onBack: () => void;
 }
 
@@ -16,17 +18,27 @@ export default function StepConfirm({
   minAmount,
   distanceKm,
   durationMinutes,
+  place,
   onBack,
 }: Props) {
-  const handleSubmit = () => {
-    // TODO: 추후 POST API 연동 필요
-    console.log("[그룹 생성]", {
+  const handleSubmit = async () => {
+    // 예시 POST API 호출
+    const body = {
       categoryKey: category.key,
-      minAmount,
-      distanceKm,
-      durationMinutes,
-    });
-    alert("그룹이 생성되었습니다!");
+      placeName: place.placeName,
+      address: place.addressName,
+      phone: place.phone,
+      minOrderAmount: minAmount,
+      radiusMeters: distanceKm * 1000,
+      durationMinutes: durationMinutes,
+    };
+    try {
+      console.log("[그룹 생성 요청]", body);
+      alert("그룹이 생성되었습니다!");
+    } catch (err) {
+      console.error(err);
+      alert("그룹 생성에 실패했습니다.");
+    }
   };
 
   return (
@@ -35,7 +47,26 @@ export default function StepConfirm({
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
         <h3 className="text-gray-800 font-medium mb-4">그룹 정보 확인</h3>
+
         <div className="space-y-2 text-sm text-gray-700">
+          <div className="flex justify-between">
+            <span>선택한 음식점</span>
+            <span className="font-semibold text-primary">
+              {place.placeName}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>주소</span>
+            <span>{place.addressName}</span>
+          </div>
+          {place.phone && (
+            <div className="flex justify-between">
+              <span>전화번호</span>
+              <span>{place.phone}</span>
+            </div>
+          )}
+          <hr className="my-3" />
+
           <div className="flex justify-between">
             <span>카테고리</span>
             <span>{category.displayName}</span>

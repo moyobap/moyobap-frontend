@@ -10,6 +10,7 @@ interface Props {
   radius: number;
   onBack: () => void;
   onNext: () => void;
+  onSelectPlace: (place: KakaoPlaceDto) => void;
 }
 
 export default function StepResults({
@@ -19,6 +20,7 @@ export default function StepResults({
   radius,
   onBack,
   onNext,
+  onSelectPlace,
 }: Props) {
   const [places, setPlaces] = useState<KakaoPlaceDto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,7 +53,11 @@ export default function StepResults({
       )}
       <ul className="space-y-4">
         {places.map((place, idx) => (
-          <li key={idx} className="border p-4 rounded-lg">
+          <li
+            key={idx}
+            className="border p-4 rounded-lg cursor-pointer hover:bg-gray-100"
+            onClick={() => onSelectPlace(place)} // 클릭 시 전달
+          >
             <h3 className="text-lg font-medium">{place.placeName}</h3>
             <p>{place.addressName}</p>
             <p>{place.phone}</p>
