@@ -102,10 +102,16 @@ export default function MatchPage() {
             lng={longitude}
             radius={distanceKm * 1000}
             onBack={goBack}
-            onNext={goNext}
+            onNext={() => {
+              if (selectedPlace) {
+                goNext();
+              } else {
+                alert("장소를 선택해주세요.");
+              }
+            }}
             onSelectPlace={(place) => {
               setSelectedPlace(place);
-              goNext();
+              // goNext();
             }}
           />
         )}
