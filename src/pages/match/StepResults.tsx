@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { KakaoPlaceDto } from "../../types/place";
 import { apiPlacesSearch } from "../../services/placeApi";
 import Button from "../../components/base/Button";

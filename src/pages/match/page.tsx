@@ -7,7 +7,6 @@ import StepConfirm from "./StepConfirm";
 import type { KakaoPlaceDto } from "../../types/place";
 
 type Step = 1 | 2 | 3 | 4;
-
 export default function MatchPage() {
   const [step, setStep] = useState<Step>(1);
   const [category, setCategory] = useState<{
@@ -20,7 +19,7 @@ export default function MatchPage() {
 
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
+  const [_locationError, setLocationError] = useState<string | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<KakaoPlaceDto | null>(
     null
   );
