@@ -91,11 +91,14 @@ export default function MatchPage() {
             setDistanceKm={setDistanceKm}
             durationMinutes={durationMinutes}
             setDurationMinutes={setDurationMinutes}
-            onNext={goNext}
+            onNext={() => {
+              setSelectedPlace(null);
+              goNext();
+            }}
             onBack={goBack}
           />
         )}
-        {step === 3 && category && latitude && longitude && (
+        {step === 3 && category && latitude !== null && longitude !== null && (
           <StepResults
             categoryKey={category.key}
             lat={latitude}
@@ -115,17 +118,19 @@ export default function MatchPage() {
             }}
           />
         )}
-        {step === 3 && category && (!latitude || !longitude) && (
-          <div className="text-center py-8">
-            <p className="text-gray-600 mb-4">
-              위치 정보가 필요합니다. 브라우저 설정에서 위치 접근을
-              허용해주세요.
-            </p>
-            <Button variant="secondary" onClick={goBack}>
-              이전
-            </Button>
-          </div>
-        )}
+        {step === 3 &&
+          category &&
+          (latitude === null || longitude === null) && (
+            <div className="text-center py-8">
+              <p className="text-gray-600 mb-4">
+                위치 정보가 필요합니다. 브라우저 설정에서 위치 접근을
+                허용해주세요.
+              </p>
+              <Button variant="secondary" onClick={goBack}>
+                이전
+              </Button>
+            </div>
+          )}
         {step === 4 && category && selectedPlace && (
           <StepConfirm
             category={category}
