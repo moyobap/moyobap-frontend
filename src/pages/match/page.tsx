@@ -5,6 +5,7 @@ import StepCondition from "./StepCondition";
 import StepResults from "./StepResults";
 import StepConfirm from "./StepConfirm";
 import type { KakaoPlaceDto } from "../../types/place";
+import Button from "../../components/base/Button";
 
 type Step = 1 | 2 | 3 | 4;
 export default function MatchPage() {
@@ -19,7 +20,7 @@ export default function MatchPage() {
 
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  const [_locationError, setLocationError] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<KakaoPlaceDto | null>(
     null
   );
@@ -52,6 +53,12 @@ export default function MatchPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="max-w-3xl mx-auto py-10 px-4">
+        {locationError && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            <i className="ri-error-warning-line mr-2" />
+            {locationError}
+          </div>
+        )}
         <div className="flex justify-between mb-8">
           {["카테고리", "조건 설정", "검색 결과", "최종 확인"].map(
             (label, i) => (
@@ -101,6 +108,17 @@ export default function MatchPage() {
               goNext();
             }}
           />
+        )}
+        {step === 3 && category && (!latitude || !longitude) && (
+          <div className="text-center py-8">
+            <p className="text-gray-600 mb-4">
+              위치 정보가 필요합니다. 브라우저 설정에서 위치 접근을
+              허용해주세요.
+            </p>
+            <Button variant="secondary" onClick={goBack}>
+              이전
+            </Button>
+          </div>
         )}
         {step === 4 && category && selectedPlace && (
           <StepConfirm
