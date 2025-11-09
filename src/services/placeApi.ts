@@ -17,8 +17,8 @@ export async function apiPlacesSearch(
     {
       params: {
         category: categoryKey,
-        x: latitude,
-        y: longitude,
+        x: longitude,
+        y: latitude,
         radius: radiusMeters,
       },
     }
