@@ -4,7 +4,7 @@ import AuthLayout from "../components/layout/AuthLayout";
 import { FormField } from "../components/form/FormField";
 import Button from "../components/base/Button";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -59,9 +59,8 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const {
     register,
-    control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid, touchedFields },
+    formState: { errors, isSubmitting, isValid },
     setError,
     clearErrors,
     watch,

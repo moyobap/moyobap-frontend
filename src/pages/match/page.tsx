@@ -1,54 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/layout/Header";
-import StepBrand from "./StepBrand";
+import StepCategory from "./StepCategory";
 import StepCondition from "./StepCondition";
+import StepResults from "./StepResults";
 import StepConfirm from "./StepConfirm";
-import type { Brand } from "../../types";
+import type { KakaoPlaceDto } from "../../types/place";
+import Button from "../../components/base/Button";
 
-type Step = 1 | 2 | 3;
-
+type Step = 1 | 2 | 3 | 4;
 export default function MatchPage() {
   const [step, setStep] = useState<Step>(1);
-  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
-  const [minAmount, setMinAmount] = useState<number>(15000);
+  const [category, setCategory] = useState<{
+    key: string;
+    displayName: string;
+  } | null>(null);
+  const [minAmount, setMinAmount] = useState<number>(0);
   const [distanceKm, setDistanceKm] = useState<number>(1);
   const [durationMinutes, setDurationMinutes] = useState<number>(30);
 
-  const goNext = () => setStep((prev) => Math.min(prev + 1, 3) as Step);
-  const goBack = () => setStep((prev) => Math.max(prev - 1, 1) as Step);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<KakaoPlaceDto | null>(
+    null
+  );
+
+  const goNext = () => setStep((p) => (p < 4 ? ((p + 1) as Step) : p));
+  const goBack = () => setStep((p) => (p > 1 ? ((p - 1) as Step) : p));
+
+  // 위치 정보 가져오는 로직 추가
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationError("이 브라우저에서는 위치 정보가 지원되지 않습니다.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      },
+      (error) => {
+        setLocationError(
+          "위치 정보를 가져올 수 없습니다. 위치 접근을 허용해주세요."
+        );
+        console.error(error);
+      }
+    );
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
       <div className="max-w-3xl mx-auto py-10 px-4">
+        {locationError && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            <i className="ri-error-warning-line mr-2" />
+            {locationError}
+          </div>
+        )}
         <div className="flex justify-between mb-8">
-          {["브랜드 선택", "조건 설정", "최종 확인"].map((label, i) => (
-            <div
-              key={i}
-              className={`flex-1 text-center py-2 border-b-2 ${
-                step === i + 1
-                  ? "border-[#5B8DEF] text-[#5B8DEF] font-semibold"
-                  : "border-gray-200 text-gray-400"
-              }`}
-            >
-              <span className="text-sm">
-                {" "}
-                {i + 1}. {label}{" "}
-              </span>
-            </div>
-          ))}
+          {["카테고리", "조건 설정", "검색 결과", "최종 확인"].map(
+            (label, i) => (
+              <div
+                key={i}
+                className={`flex-1 text-center py-2 border-b-2 ${
+                  step === i + 1
+                    ? "border-primary text-primary font-semibold"
+                    : "border-gray-200 text-gray-400"
+                }`}
+              >
+                {i + 1}. {label}
+              </div>
+            )
+          )}
         </div>
 
         {step === 1 && (
-          <StepBrand
-            selectedBrand={selectedBrand}
-            onSelectBrand={(brand) => setSelectedBrand(brand)}
+          <StepCategory
+            selectedCategory={category}
+            onSelectCategory={(cat) => setCategory(cat)}
             onNext={goNext}
           />
         )}
-
-        {step === 2 && selectedBrand && (
+        {step === 2 && category && (
           <StepCondition
             minAmount={minAmount}
             setMinAmount={setMinAmount}
@@ -56,17 +91,53 @@ export default function MatchPage() {
             setDistanceKm={setDistanceKm}
             durationMinutes={durationMinutes}
             setDurationMinutes={setDurationMinutes}
-            onNext={goNext}
+            onNext={() => {
+              setSelectedPlace(null);
+              goNext();
+            }}
             onBack={goBack}
           />
         )}
-
-        {step === 3 && selectedBrand && (
+        {step === 3 && category && latitude !== null && longitude !== null && (
+          <StepResults
+            categoryKey={category.key}
+            lat={latitude}
+            lng={longitude}
+            radius={distanceKm * 1000}
+            onBack={goBack}
+            onNext={() => {
+              if (selectedPlace) {
+                goNext();
+              } else {
+                alert("장소를 선택해주세요.");
+              }
+            }}
+            onSelectPlace={(place) => {
+              setSelectedPlace(place);
+              // goNext();
+            }}
+          />
+        )}
+        {step === 3 &&
+          category &&
+          (latitude === null || longitude === null) && (
+            <div className="text-center py-8">
+              <p className="text-gray-600 mb-4">
+                위치 정보가 필요합니다. 브라우저 설정에서 위치 접근을
+                허용해주세요.
+              </p>
+              <Button variant="secondary" onClick={goBack}>
+                이전
+              </Button>
+            </div>
+          )}
+        {step === 4 && category && selectedPlace && (
           <StepConfirm
-            brand={selectedBrand}
+            category={category}
             minAmount={minAmount}
             distanceKm={distanceKm}
             durationMinutes={durationMinutes}
+            place={selectedPlace}
             onBack={goBack}
           />
         )}
