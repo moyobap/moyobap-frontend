@@ -4,9 +4,8 @@ export interface Group {
   brandName: string;
   expectedAmount: number;
   maxDistance: number;
-  durationMinutes: number;
   deadlineTime: string;
   currentOrderAmount: number;
   closed: boolean;
-  creatorId: number;
+  creatorNickname: string;
 }
