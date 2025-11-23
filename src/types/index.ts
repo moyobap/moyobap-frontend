@@ -42,20 +42,6 @@ export interface GroupMember {
   cartTotal: number;
 }
 
-export interface Group {
-  id: string;
-  brand: Brand;
-  hostUserId: string;
-  distanceKm: number;
-  minAmount: number;
-  deliveryFee: number;
-  deadline: Date;
-  members: GroupMember[];
-  status: "OPEN" | "FULL" | "EXPIRED" | "CHECKOUT";
-  total: number;
-  progressPct: number;
-}
-
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
 export type AlertType = "info" | "success" | "warning" | "error";

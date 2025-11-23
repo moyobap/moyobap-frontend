@@ -133,11 +133,11 @@ export default function HomePage() {
           </>
         ) : (
           <div className="text-center py-16">
-            <i className="ri-search‑line text‑6xl text‑gray‑300 mb‑4" />
-            <h3 className="text-xl font-semibold text‑gray‑900 mb‑2">
+            <i className="ri-search-line text-6xl text-gray-300 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
               검색 결과가 없습니다
             </h3>
-            <p className="text-gray‑600 mb‑6">
+            <p className="text-gray-600 mb-6">
               다른 검색어를 시도하거나 새로운 그룹을 만들어보세요
             </p>
             <Link to="/match">
