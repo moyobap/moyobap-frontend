@@ -1,3 +1,8 @@
+export interface BrandInfo {
+  name: string;
+  category: string;
+}
+
 export interface Group {
   id: number;
   menuCategory: string;
@@ -5,7 +10,7 @@ export interface Group {
   expectedAmount: number;
   maxDistance: number;
   deadlineTime: string;
-  currentOrderAmount: number;
   closed: boolean;
+  currentOrderAmount: number;
   creatorNickname: string;
 }
