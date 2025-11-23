@@ -7,7 +7,6 @@ interface Props {
 
 export default function GroupCard({ group }: Props) {
   const hasReachedMinimum = group.currentOrderAmount >= group.expectedAmount;
-  const distanceKm = (group.maxDistance / 1000).toFixed(1);
 
   return (
     <Link to={`/groups/${group.id}`}>
