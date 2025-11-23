@@ -42,7 +42,7 @@ export interface GroupMember {
   cartTotal: number;
 }
 
-export interface Group {
+export interface GroupFull {
   id: string;
   brand: Brand;
   hostUserId: string;

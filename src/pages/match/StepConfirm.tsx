@@ -1,11 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/base/Button";
 import type { KakaoPlaceDto } from "../../types/place";
+import type { Group } from "../../types/group";
+import { groupApi } from "../../services/groupApi";
 
 interface Props {
-  category: {
-    key: string;
-    displayName: string;
-  };
+  category: { key: string; displayName: string };
   minAmount: number;
   distanceKm: number;
   durationMinutes: number;
@@ -21,21 +21,21 @@ export default function StepConfirm({
   place,
   onBack,
 }: Props) {
+  const navigate = useNavigate();
+
   const handleSubmit = async () => {
-    // 예시 POST API 호출
-    const body = {
-      categoryKey: category.key,
-      placeName: place.placeName,
-      address: place.addressName,
-      phone: place.phone,
-      minOrderAmount: minAmount,
-      radiusMeters: distanceKm * 1000,
-      durationMinutes: durationMinutes,
-    };
     try {
-      console.log("[그룹 생성 요청]", body);
-      alert("그룹이 생성되었습니다!");
-    } catch (err) {
+      const body = {
+        menuCategory: category.key,
+        brandName: place.placeName,
+        expectedAmount: minAmount,
+        maxDistance: Math.round(distanceKm * 1000),
+        durationMinutes,
+      };
+      const createdGroup: Group = await groupApi.createGroup(body);
+      console.log("[그룹 생성 성공]", createdGroup);
+      navigate("/");
+    } catch (err: any) {
       console.error(err);
       alert("그룹 생성에 실패했습니다.");
     }
@@ -44,10 +44,8 @@ export default function StepConfirm({
   return (
     <div>
       <h2 className="text-xl font-semibold text-gray-900 mb-4">최종 확인</h2>
-
       <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
         <h3 className="text-gray-800 font-medium mb-4">그룹 정보 확인</h3>
-
         <div className="space-y-2 text-sm text-gray-700">
           <div className="flex justify-between">
             <span>선택한 음식점</span>
@@ -66,7 +64,6 @@ export default function StepConfirm({
             </div>
           )}
           <hr className="my-3" />
-
           <div className="flex justify-between">
             <span>카테고리</span>
             <span>{category.displayName}</span>
@@ -87,14 +84,11 @@ export default function StepConfirm({
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-gray-700 mb-8">
-        <div className="flex items-start gap-2">
-          <i className="ri-information-line text-blue-500 text-lg mt-0.5" />
-          <ul className="list-disc list-inside space-y-1">
-            <li>최소 주문금액 달성 시 자동으로 주문이 진행됩니다</li>
-            <li>시간 내 최소금액이 모이지 않으면 그룹이 해산됩니다</li>
-            <li>배달비는 참여 인원으로 균등 분할됩니다</li>
-          </ul>
-        </div>
+        <ul className="list-disc list-inside space-y-1">
+          <li>최소 주문금액 달성 시 자동으로 주문이 진행됩니다</li>
+          <li>시간 내 최소금액이 모이지 않으면 그룹이 해산됩니다</li>
+          <li>배달비는 참여 인원으로 균등 분할됩니다</li>
+        </ul>
       </div>
 
       <div className="flex justify-between">

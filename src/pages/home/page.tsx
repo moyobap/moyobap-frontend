@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import type { Group } from "../../types";
-import { api } from "../../services/api";
+import type { Group } from "../../types/group";
+import { groupApi } from "../../services/groupApi";
 import Header from "../../components/layout/Header";
 import GroupCard from "../../components/feature/GroupCard";
 import Button from "../../components/base/Button";
@@ -19,7 +19,7 @@ export default function HomePage() {
     (async () => {
       try {
         setLoading(true);
-        const data = await api.getActiveGroups();
+        const data = await groupApi.getActiveGroups();
         setGroups(data);
       } catch (error) {
         console.error("그룹 로딩 실패:", error);
@@ -32,22 +32,23 @@ export default function HomePage() {
   const filteredGroups = useMemo(() => {
     return groups
       .filter((group) => {
-        const matchesSearch = group.brand.name
+        const matchesSearch = group.brandName
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
         const matchesCategory =
           selectedCategory === "전체" ||
-          group.brand.category === selectedCategory;
+          group.menuCategory === selectedCategory;
         return matchesSearch && matchesCategory;
       })
       .sort((a, b) => {
         switch (sortBy) {
           case "distance":
-            return a.distanceKm - b.distanceKm;
+            return a.maxDistance - b.maxDistance;
           case "deadline":
-            return a.deadline.getTime() - b.deadline.getTime();
-          case "progress":
-            return b.progressPct - a.progressPct;
+            return (
+              new Date(a.deadlineTime).getTime() -
+              new Date(b.deadlineTime).getTime()
+            );
           default:
             return 0;
         }
@@ -105,7 +106,6 @@ export default function HomePage() {
             >
               <option value="distance">거리 가까운 순</option>
               <option value="deadline">마감 임박 순</option>
-              <option value="progress">진행률 높은 순</option>
             </select>
           </div>
         </section>

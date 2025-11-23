@@ -1,14 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import type { Group } from "../../../types";
-import { api } from "../../../services/api";
+import type { GroupFull } from "../../../types";
 import Header from "../../../components/layout/Header";
 import GroupDetail from "../../../components/feature/GroupDetail";
+import { api } from "../../../services/api";
 
 export default function GroupDetailPage() {
   const { id } = useParams();
-  const [group, setGroup] = useState<Group | null>(null);
-
+  const [group, setGroup] = useState<GroupFull | null>(null);
   useEffect(() => {
     const load = async () => {
       const data = await api.getGroupById(id!);
