@@ -1,10 +1,10 @@
 import Countdown from "../base/Countdown";
 import Progress from "../base/Progress";
 import Button from "../base/Button";
-import type { Group } from "../../types";
+import type { GroupFull } from "../../types";
 
 interface Props {
-  group: Group;
+  group: GroupFull;
 }
 
 export default function GroupDetail({ group }: Props) {

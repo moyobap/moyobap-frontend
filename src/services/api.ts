@@ -1,13 +1,20 @@
-import type { Group } from "../types";
-import { mockGroups } from "../mocks/groups";
+import axios from "axios";
+import type { GroupFull } from "../types";
 
+const client = axios.create({
+  baseURL: "http://localhost:8080/api/v1",
+  withCredentials: true,
+});
+
+// 단일 그룹 조회
 export const api = {
-  getActiveGroups: async (): Promise<Group[]> => {
-    await new Promise((res) => setTimeout(res, 500));
-    return mockGroups;
-  },
-
-  getGroupById: async (id: string): Promise<Group | undefined> => {
-    return mockGroups.find((group) => group.id === id);
+  async getGroupById(id: string): Promise<GroupFull | null> {
+    try {
+      const resp = await client.get<{ data: GroupFull }>(`/group-orders/${id}`);
+      return resp.data.data;
+    } catch (err) {
+      console.error("그룹 조회 실패", err);
+      return null;
+    }
   },
 };
